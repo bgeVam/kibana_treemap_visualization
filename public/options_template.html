@@ -1,0 +1,24 @@
+<div class='form-group'>
+  <label>Session Field</label>
+  <input type='text' ng-model='vis.params.sessionField' class='form-control' /></br>
+
+  <label>Action Field</label>
+  <input type='text' ng-model='vis.params.actionField' class='form-control' /></br>
+
+  <label>Time Field</label>
+  <input type='text' ng-model='vis.params.timeField' class='form-control' /></br>
+
+  <label>Max Session Count - {{ vis.params.maxSessionCount }}</label>
+  <input type='range' ng-model='vis.params.maxSessionCount' class='form-control' min='2' max='100' /></br>
+
+  <label>Max Session Length - {{ vis.params.maxSessionLength }}</label>
+  <input type='range' ng-model='vis.params.maxSessionLength' class='form-control' min='2' max='100' /></br>
+
+  <label>(Optional) Filter on sessions that include action</label>
+  <input type='text' ng-model='vis.params.filterAction' class='form-control' /></br>
+  and show as</br>
+  
+  <input type='radio' ng-model='vis.params.filterPosition' value='source'>source</input></br>
+  
+  <input type='radio' ng-model='vis.params.filterPosition' value='destination'>destination</input>
+</div>
