@@ -16,45 +16,18 @@ var defaults = {
     height: 500
 };
 
-export function draw1(response) {
-    d3.json("https://raw.githubusercontent.com/bgeVam/json/master/countries.json", function(err, res) {
-        if (!err) {
-            console.log("Draw1");
-            console.log(res.constructor.name);
-            console.log(response.constructor.name);
-            console.log(res[0]);
-            console.log(response[0]);
-            var arr = [];
+export function draw(response) {
+            var data = [];
             for (var property in response) {
               if (response.hasOwnProperty(property)) {
-                 console.log(property);
-                 arr.push(response[property]);
+                 data.push(response[property]);
              }
             }
-            var result = arr;
-            response = result;
-            console.log(response);
-            console.log(res[0]);
-            console.log(response[0]);
-            var data = d3.nest().key(function(d) { return d.region; }).key(function(d) { return d.subregion; }).entries(res);
-            var data1 = d3.nest().key(function(d) { return d.region; }).key(function(d) { return d.subregion; }).entries(response);
-            let popped = data1.pop();
-            console.log(data);
-            console.log(data1);
-            console.log(data[0]);
-            console.log(data1[0]);
-            main({title: "World Population"}, {key: "World", values: data1});
-        }
-    });
+            var nested_data = d3.nest().key(function(d) { return d.region; }).key(function(d) { return d.subregion; }).entries(data);
+            nested_data.pop();
+            main({title: "World Population"}, {key: "World", values: nested_data});
 }
 
-export function draw(response) {
-            console.log("Draw");
-            console.log(response);
-            var data = d3.nest().key(function(d) { return d.region; }).key(function(d) { return d.subregion; }).entries(response);
-            console.log(data);
-            //main({title: "World Population"}, {key: "World", values: response});
-}
 
 function main(o, data) {
   var root,
@@ -63,7 +36,7 @@ function main(o, data) {
       rname = opts.rootname,
       margin = opts.margin,
       theight = 36 + 16;
-  $('#chart').width(opts.width).height(opts.height);
+  $('#treemap').width(opts.width).height(opts.height);
   var width = opts.width - margin.left - margin.right,
       height = opts.height - margin.top - margin.bottom - theight,
       transitioning;
@@ -83,7 +56,7 @@ function main(o, data) {
       .ratio(height / width * 0.5 * (1 + Math.sqrt(5)))
       .round(false);
   
-  var svg = d3.select("#chart").append("svg")
+  var svg = d3.select("#treemap").append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.bottom + margin.top)
       .style("margin-left", -margin.left + "px")
@@ -106,22 +79,16 @@ function main(o, data) {
       .attr("dy", ".75em");
 
   if (opts.title) {
-    $("#chart").prepend("<p class='title'>" + opts.title + "</p>");
+    $("#treemap").prepend("<p class='title'>" + opts.title + "</p>");
   }
   if (data instanceof Array) {
     root = { key: rname, values: data };
   } else {
     root = data;
   }
-  console.log("1")
   initialize(root);
-  console.log("2")
   accumulate(root);
-  console.log("3")
   layout(root);
-  console.log("4")
-  console.log(root);
-  console.log("5")
   display(root);
 
   if (window.parent !== window) {
@@ -168,27 +135,20 @@ function main(o, data) {
   }
 
   function display(d) {
-    console.log("1.1.1")
     grandparent
         .datum(d.parent)
         .on("click", transition)
       .select("text")
         .text(name(d));
-    console.log("1.1.6")
     var g1 = svg.insert("g", ".grandparent")
         .datum(d)
         .attr("class", "depth");
-    console.log("1.1.7")
-    console.log(d)
-    console.log(d._children)
     var g = g1.selectAll("g")
         .data(d._children)
       .enter().append("g");
-    console.log("1.1.7")
     g.filter(function(d) { return d._children; })
         .classed("children", true)
         .on("click", transition);
-    console.log("1.1.2")
     var children = g.selectAll(".child")
         .data(function(d) { return d._children || [d]; })
       .enter().append("g");
@@ -206,7 +166,6 @@ function main(o, data) {
     g.append("rect")
         .attr("class", "parent")
         .call(rect);
-    console.log("1.1.4")
     var t = g.append("text")
         .attr("class", "ptext")
         .attr("dy", ".75em")
@@ -224,11 +183,9 @@ function main(o, data) {
     function transition(d) {
       if (transitioning || !d) return;
       transitioning = true;
-      console.log("1.1")
       var g2 = display(d),
           t1 = g1.transition().duration(750),
           t2 = g2.transition().duration(750);
-      console.log("1.2")
       // Update the domain only after entering new elements.
       x.domain([d.x, d.x + d.dx]);
       y.domain([d.y, d.y + d.dy]);
