@@ -1,20 +1,18 @@
-import * as data from './countries.json';
+import * as elastic_response from './response.json';
 
 const getRequestBody = (params, queryFilter, timeFilter) => {
   const requestBody = {
     'size': 0,
     'query': {
       'bool': {
-        'must': [
-          {
-            'range': {
-              'timestamp': {
-                'gte': timeFilter.from,
-                'lte': timeFilter.to
-              }
+        'must': [{
+          'range': {
+            'timestamp': {
+              'gte': timeFilter.from,
+              'lte': timeFilter.to
             }
           }
-        ]
+        }]
       }
     },
     'aggs': {
@@ -26,13 +24,11 @@ const getRequestBody = (params, queryFilter, timeFilter) => {
         'aggs': {
           'first_events': {
             'top_hits': {
-              'sort': [
-                {
-                  [params.timeField]: {
-                    'order': 'asc'
-                  }
+              'sort': [{
+                [params.timeField]: {
+                  'order': 'asc'
                 }
-              ],
+              }],
               '_source': {
                 'includes': [params.actionField]
               },
@@ -45,7 +41,9 @@ const getRequestBody = (params, queryFilter, timeFilter) => {
   };
   const queries = queryFilter.getFilters();
   if (queries && queries.length) {
-    queries.forEach(({ meta }) => {
+    queries.forEach(({
+      meta
+    }) => {
       if (meta.disabled) return;
       let query;
       switch (meta.type) {
@@ -88,7 +86,9 @@ const getRequestBody = (params, queryFilter, timeFilter) => {
   return requestBody;
 };
 
-function addMustQuery(request, query, { negate }) {
+function addMustQuery(request, query, {
+  negate
+}) {
   const boolObject = request.query.bool;
   let matcher;
   if (negate) {
@@ -99,7 +99,9 @@ function addMustQuery(request, query, { negate }) {
   matcher.push(query);
 }
 
-function addShouldQuery(request, query, { negate }) {
+function addShouldQuery(request, query, {
+  negate
+}) {
   let matcher;
   if (negate) {
     matcher = request.query.bool.must_not ? request.query.bool.must_not : (request.query.bool.must_not = []);
@@ -110,7 +112,9 @@ function addShouldQuery(request, query, { negate }) {
   matcher.push(query);
 }
 
-function addRangeQuery(request, query, { negate }) {
+function addRangeQuery(request, query, {
+  negate
+}) {
   let matcher;
   if (negate) {
     matcher = request.query.bool.must_not ? request.query.bool.must_not : (request.query.bool.must_not = []);
@@ -120,23 +124,26 @@ function addRangeQuery(request, query, { negate }) {
   matcher.push(query);
 }
 
-async function getData() {
-  return data;
+async function getData(vis) {
+  var res = {
+    elastic: elastic_response,
+    visualization: vis
+  };
+  return res;
 }
 
-export function RequestHandlerProvider(Private, es) { 
+export function RequestHandlerProvider(Private, es) {
   return {
     handle(vis) {
-      const { timeFilter, queryFilter } = vis.API;
+      const {
+        timeFilter,
+        queryFilter
+      } = vis.API;
       return new Promise(resolve => {
         const params = vis.params;
         var filters = getRequestBody(params, queryFilter, timeFilter._time);
         console.log(filters.length);
-        var requestBody = {
-          filters: filters,
-          predictionTarget: vis.aggs[0].params.field.name
-        };
-        getData().then(result => resolve(result));
+        getData(vis).then(result => resolve(result));
       });
     }
   };
