@@ -1,0 +1,54 @@
+GET _search
+{
+  "aggs": {
+    "3": {
+      "terms": {
+        "field": "mandant.keyword",
+        "size": 5,
+        "order": {
+          "_count": "desc"
+        }
+      },
+      "aggs": {
+        "2": {
+          "terms": {
+            "field": "discipline2.keyword",
+            "size": 5,
+            "order": {
+              "_count": "desc"
+            }
+          }
+        }
+      }
+    }
+  },
+  "size": 0,
+  "_source": {
+    "excludes": []
+  },
+  "stored_fields": [
+    "*"
+  ],
+  "script_fields": {},
+  "docvalue_fields": [
+    {
+      "field": "@timestamp",
+      "format": "date_time"
+    }
+  ],
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match_all": {}
+        },
+        {
+          "match_all": {}
+        }
+      ],
+      "filter": [],
+      "should": [],
+      "must_not": []
+    }
+  }
+}

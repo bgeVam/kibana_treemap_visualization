@@ -1,8 +1,7 @@
-export function handleResponse(vis, response) {
-  console.log(vis)
-  console.log(response)
-  return {
-    visData: vis,
-    response: response
-  };
+export function handleResponse(response) {
+	var res = {
+		elastic: response.elastic,
+		visualization: response.visualization
+	};
+	return res;
 }

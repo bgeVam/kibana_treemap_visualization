@@ -1,4 +1,6 @@
-import { draw } from './treemap_d3';
+import {
+  renderTreeMap
+} from './treemap_d3';
 
 var css = `
 #chart {
@@ -74,39 +76,65 @@ export default class TreemapVisualizationController {
   destroy() {
     this.el.innerHTML = '';
   }
-  render({visData, response}) {
-    this.container.innerHTML = '';
-    //this behavior is rather strange:
-    response = visData
-    console.log(visData)
-    console.log(response)
 
+  render(response) {
+    this.container.innerHTML = '';
     var treemap = document.createElement('div');
     treemap.setAttribute("id", "treemap");
     treemap.setAttribute("class", "treemapclass");
-    treemap.style.width='500px';
     this.container.appendChild(treemap);
-    //var c1 = $('#treemap');
-    //$('#treemap').width(400).height(300);
-    //console.log(c1.width())
-     // Equivalent to document.getElementById( "foo" )
-
-    
-    var opts = {
-    title: "", // Title 
-    rootname: "TOP", // Name of top-level entity in case data is an array
-    format: ",d", // Format as per d3.format (https://github.com/mbostock/d3/wiki/Formatting)
-    field: "data", // Object field to treat as data [default: data]
-    width: 960, // Width of SVG
-    height: 500, // Height of SVG
-    margin: { top: 48, right: 0, bottom: 0, left: 0 } // Margin as per D3 convention
-    };
-    draw(response);
-
-
+    var data = response.elastic;
+    data.aggregations.key = "Patients";
+    var nestedData = nestData(data.aggregations, 0, []);
+    renderTreeMap({
+      title: "Rehabilitation Data"
+    }, {
+      key: data.aggregations.key,
+      values: nestedData.values
+    });
     return new Promise(resolve => {
       resolve('when done rendering');
     });
-
   }
 };
+
+function nestData(data, iterationLevel, childs) {
+  var result = new Object();
+  result.key = data.key;
+  var nextLevel = getNextLevel(Object.keys(data));
+  if (nextLevel) {
+    iterationLevel++;
+    childs.push({
+      [getChildName(iterationLevel)]: data.key
+    });
+    var values = [];
+    data[nextLevel].buckets.forEach(function(entry) {
+      values.push(nestData(entry, iterationLevel, childs));
+    });
+    result.values = values;
+  } else {
+    result.value = data.doc_count;
+    childs.forEach(function(entry) {
+      var propertyName = Object.keys(entry)[0];
+      result[propertyName] = entry[propertyName]
+    });
+  }
+  return result;
+}
+
+function getNextLevel(array) {
+  var result = [];
+  array.forEach(function(entry) {
+    if (!isNaN(parseFloat(entry)) && isFinite(entry)) {
+      result.push(entry)
+    }
+  });
+  return result[0];
+}
+
+function getChildName(iterationLevel) {
+  var childname = "";
+  for (var i = 0; i < iterationLevel; i++) {
+    childname += "child_";
+  }
+}
