@@ -77,8 +77,28 @@ export default class TreemapVisualizationController {
     this.el.innerHTML = '';
   }
 
-  render(response) {
+  render(table, status) {
+    //const config = this.props.vis.params.metric;
+    //const isPercentageMode = config.percentageMode;
+    //const min = config.colorsRange[0].from;
+    //const max = _.last(config.colorsRange).to;
+    //const colors = this._getColors();
+    //const labels = this._getLabels();
+    const metrics = [];
+
+    let bucketAgg;
+    let bucketColumnId;
+    let rowHeaderIndex;
+    console.log(table)
+    
+  }
+
+
+  ronder(visData, status) {
+    console.log(visData)
+    console.log(status)
     this.container.innerHTML = '';
+    /*
     var treemap = document.createElement('div');
     treemap.setAttribute("id", "treemap");
     treemap.setAttribute("class", "treemapclass");
@@ -92,6 +112,7 @@ export default class TreemapVisualizationController {
       key: data.aggregations.key,
       values: nestedData.values
     });
+    */
     return new Promise(resolve => {
       resolve('when done rendering');
     });
