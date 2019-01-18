@@ -6,9 +6,6 @@ export default class TreemapVisualizationController {
   constructor(el, vis) {
     this.vis = vis;
     this.el = el;
-    this.container = document.createElement('div');
-    this.container.className = 'myvis-container-div';
-    this.el.appendChild(this.container);
   }
 
   destroy() {
@@ -16,21 +13,24 @@ export default class TreemapVisualizationController {
   }
 
   render(table, status) {
-    this.container.innerHTML = '';
+    this.destroy();
     var treemap = document.createElement('div');
     treemap.setAttribute("id", "treemap");
     treemap.setAttribute("class", "treemapclass");
-    this.container.appendChild(treemap);
+    this.el.appendChild(treemap);
     var values = [];
     table.rows.forEach(function(entry) {
       values.push(renameRow(entry, table.columns));
     });
     var keyLabels = getKeyLabels(table.columns);
     var data = nestData(values, keyLabels);
+    var parent = $('#treemap').closest('.visualization');
     renderTreeMap({
       childLabels: keyLabels,
       vis: this.vis,
-      table: table
+      table: table,
+      width: parent.width(),
+      height: parent.height()
     }, {
       key: "test",
       values: data
