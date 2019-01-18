@@ -1,6 +1,5 @@
 .treemap {
   background: #fff;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .title {
@@ -10,12 +9,9 @@
     margin-top: 6px;
     margin-bottom: 6px;
 }
+
 text {
   pointer-events: none;
-}
-
-.grandparent text {
-  font-weight: bold;
 }
 
 div.treemap rect {
@@ -23,21 +19,8 @@ div.treemap rect {
   stroke: #fff;
 }
 
-div.treemap rect.parent,
-.grandparent rect {
-  stroke-width: 2px;
-}
-
 div.treemap rect.parent {
     pointer-events: none;
-}
-
-.grandparent rect {
-  fill: orange;
-}
-
-.grandparent:hover rect {
-  fill: #ee9700;
 }
 
 .children rect.parent,

@@ -1,6 +1,6 @@
 var defaults = {
   margin: {
-    top: 24,
+    top: 0,
     right: 0,
     bottom: 0,
     left: 0
@@ -50,19 +50,6 @@ export function renderTreeMap(o, data) {
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
     .style("shape-rendering", "crispEdges");
-
-  var grandparent = svg.append("g")
-    .attr("class", "grandparent");
-
-  grandparent.append("rect")
-    .attr("y", -margin.top)
-    .attr("width", width)
-    .attr("height", margin.top);
-
-  grandparent.append("text")
-    .attr("x", 6)
-    .attr("y", 6 - margin.top)
-    .attr("dy", ".75em");
 
   if (data instanceof Array) {
     root = {
@@ -118,7 +105,6 @@ export function renderTreeMap(o, data) {
       d._children.forEach(function(c) {
         if (c.values) {
           var depth = o.childLabels.length - c.values.length;
-          console.log(o.childLabels[depth])
           c.label = o.childLabels[depth];
         }
         c.x = d.x + c.x * d.dx;
@@ -132,11 +118,6 @@ export function renderTreeMap(o, data) {
   }
 
   function display(d) {
-    grandparent
-      .datum(d.parent)
-      .on("click", transition)
-      .select("text")
-      .text(name(d));
     var g1 = svg.insert("g", ".grandparent")
       .datum(d)
       .attr("class", "depth");
