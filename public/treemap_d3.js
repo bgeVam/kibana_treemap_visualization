@@ -12,8 +12,6 @@ var defaults = {
 };
 
 export function renderTreeMap(o, data) {
-  console.log(o)
-  console.log(data)
   var root,
     opts = $.extend(true, {}, defaults, o),
     formatNumber = d3.format(opts.format),
@@ -118,6 +116,11 @@ export function renderTreeMap(o, data) {
         _children: d._children
       });
       d._children.forEach(function(c) {
+        if (c.values) {
+          var depth = o.childLabels.length - c.values.length;
+          console.log(o.childLabels[depth])
+          c.label = o.childLabels[depth];
+        }
         c.x = d.x + c.x * d.dx;
         c.y = d.y + c.y * d.dy;
         c.dx *= d.dx;
@@ -144,7 +147,7 @@ export function renderTreeMap(o, data) {
         return d._children;
       })
       .classed("children", true)
-      .on("click", transition);
+      .on("click", childClicked);
     var children = g.selectAll(".child")
       .data(function(d) {
         return d._children || [d];
@@ -187,6 +190,18 @@ export function renderTreeMap(o, data) {
       .style("fill", function(d) {
         return color(d.key);
       });
+
+    function childClicked(d) {
+      console.log("child clicked, add filter where " + d.label + " = " + d.key)
+      var index = o.childLabels.indexOf(d.label);
+      var bucketAgg = o.table.columns[index].aggConfig;
+      if (o.table.rows.length > 1) {
+        const filter = bucketAgg.createFilter(d.key);
+        var queryFilter = o.vis.API.queryFilter;
+        queryFilter.addFilters(filter);
+      }
+      return transition(d);
+    }
 
     function transition(d) {
       if (transitioning || !d) return;
@@ -276,16 +291,3 @@ export function renderTreeMap(o, data) {
       d.key + " (" + formatNumber(d.value) + ")";
   }
 }
-
-/*
-
-if (window.location.hash === "") {
-    d3.json("countries.json", function(err, res) {
-        if (!err) {
-            console.log(res);
-            var data = d3.nest().key(function(d) { return d.region; }).key(function(d) { return d.subregion; }).entries(res);
-            main({title: "World Population"}, {key: "World", values: data});
-        }
-    });
-}
-*/

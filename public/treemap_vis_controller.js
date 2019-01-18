@@ -2,70 +2,6 @@ import {
   renderTreeMap
 } from './treemap_d3';
 
-/*
-var css = `
-.treemap {
-  background: #fff;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.title {
-    font-weight: bold;
-    font-size: 24px;
-    text-align: center;
-    margin-top: 6px;
-    margin-bottom: 6px;
-}
-text {
-  pointer-events: none;
-}
-
-.grandparent text {
-  font-weight: bold;
-}
-
-div.treemap rect {
-  fill: none;
-  stroke: #fff;
-}
-
-div.treemap rect.parent,
-.grandparent rect {
-  stroke-width: 2px;
-}
-
-div.treemap rect.parent {
-    pointer-events: none;
-}
-
-.grandparent rect {
-  fill: orange;
-}
-
-.grandparent:hover rect {
-  fill: #ee9700;
-}
-
-.children rect.parent,
-.grandparent rect {
-  cursor: pointer;
-}
-
-.children rect.parent {
-  fill: #bbb;
-  fill-opacity: .5;
-}
-
-.children:hover rect.child {
-  fill: #bbb;
-}
-`;
-
-var s = document.createElement("style");
-s.innerHTML = css;
-document.getElementsByTagName("head")[0].appendChild(s);
-*/
-
 export default class TreemapVisualizationController {
   constructor(el, vis) {
     this.vis = vis;
@@ -85,13 +21,17 @@ export default class TreemapVisualizationController {
     treemap.setAttribute("id", "treemap");
     treemap.setAttribute("class", "treemapclass");
     this.container.appendChild(treemap);
-    var values = []
+    var values = [];
     table.rows.forEach(function(entry) {
       values.push(renameRow(entry, table.columns));
     });
     var keyLabels = getKeyLabels(table.columns);
     var data = nestData(values, keyLabels);
-    renderTreeMap({}, {
+    renderTreeMap({
+      childLabels: keyLabels,
+      vis: this.vis,
+      table: table
+    }, {
       key: "test",
       values: data
     });
@@ -133,7 +73,6 @@ function getKeyName(key, columns) {
   });
   return result;
 }
-
 
 function getKeyLabels(columns) {
   var keyLabels = [];
