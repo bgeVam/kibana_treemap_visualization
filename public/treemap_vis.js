@@ -1,12 +1,6 @@
 import optionsTemplate from './options_template.html';
 import TreemapVisualizationController from './treemap_vis_controller';
 import {
-  RequestHandlerProvider
-} from './RequestHandlerProvider';
-import {
-  handleResponse
-} from './ResponseHandler';
-import {
   Schemas
 } from 'ui/vis/editors/default/schemas';
 import {
@@ -21,7 +15,6 @@ import {
 
 function TreemapVisualizationProvider(Private) {
   const VisFactory = Private(VisFactoryProvider);
-  const requestHandler = Private(RequestHandlerProvider);
 
   return VisFactory.createBaseVisualization({
     name: 'treemap_visualization',

@@ -7,12 +7,13 @@ var defaults = {
   },
   rootname: "TOP",
   format: ",d",
-  title: "",
   width: 960,
   height: 500
 };
 
 export function renderTreeMap(o, data) {
+  console.log(o)
+  console.log(data)
   var root,
     opts = $.extend(true, {}, defaults, o),
     formatNumber = d3.format(opts.format),
@@ -65,9 +66,6 @@ export function renderTreeMap(o, data) {
     .attr("y", 6 - margin.top)
     .attr("dy", ".75em");
 
-  if (opts.title) {
-    $("#treemap").prepend("<p class='title'>" + opts.title + "</p>");
-  }
   if (data instanceof Array) {
     root = {
       key: rname,

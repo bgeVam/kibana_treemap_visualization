@@ -2,8 +2,9 @@ import {
   renderTreeMap
 } from './treemap_d3';
 
+/*
 var css = `
-#chart {
+.treemap {
   background: #fff;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -63,6 +64,7 @@ div.treemap rect.parent {
 var s = document.createElement("style");
 s.innerHTML = css;
 document.getElementsByTagName("head")[0].appendChild(s);
+*/
 
 export default class TreemapVisualizationController {
   constructor(el, vis) {
@@ -89,9 +91,7 @@ export default class TreemapVisualizationController {
     });
     var keyLabels = getKeyLabels(table.columns);
     var data = nestData(values, keyLabels);
-    renderTreeMap({
-      title: "Rehabilitation Data"
-    }, {
+    renderTreeMap({}, {
       key: "test",
       values: data
     });
