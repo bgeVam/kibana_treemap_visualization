@@ -185,10 +185,10 @@ export function renderTreeMap(o, data) {
       });
     t.call(text);
 
-    g.selectAll(".child")
+    g.selectAll(".parent")
       .append("title")
       .text(function(d) {
-        return d.key + " ( " + formatNumber(d.value) + ")";
+        return getTooltipText(d);
       });
 
     g.selectAll("rect")
@@ -266,6 +266,11 @@ export function renderTreeMap(o, data) {
     }
 
     return g;
+  }
+
+  function getTooltipText(d) {
+    return "field      " + "     value \n" +
+      d.label + "     " + d.key + "   " + formatNumber(d.value) + "\n";
   }
 
   function text(text) {
