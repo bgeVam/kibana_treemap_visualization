@@ -76,7 +76,7 @@ export function renderTreeMap(o, data) {
       $(this).parent().siblings().children().children().css("fill-opacity", "1");
     }
   );
-  
+
   if (window.parent !== window) {
     var myheight = document.documentElement.scrollHeight || document.body.scrollHeight;
     window.parent.postMessage({
@@ -158,11 +158,8 @@ export function renderTreeMap(o, data) {
 
     children.append("rect")
       .attr("class", "child")
-      .call(rect)
-      .append("title")
-      .text(function(d) {
-        return d.key + " (" + formatNumber(d.value) + ")";
-      });
+      .call(rect);
+
     children.append("text")
       .attr("class", "ctext")
       .text(function(d) {
@@ -187,6 +184,12 @@ export function renderTreeMap(o, data) {
         return formatNumber(d.value);
       });
     t.call(text);
+
+    g.selectAll(".parent")
+      .append("title")
+      .text(function(d) {
+        return d.key + " ( " + formatNumber(d.value) + ")";
+      });
 
     g.selectAll("rect")
       .style("fill", function(d) {

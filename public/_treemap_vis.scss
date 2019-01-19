@@ -36,6 +36,10 @@ div.treemap rect.parent {
   stroke-width: 2px;
 }
 
+.children text.ptext {
+  visibility: hidden;
+}
+
 .children:hover rect.child {
   fill: #bbb;
 }
