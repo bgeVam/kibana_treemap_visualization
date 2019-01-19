@@ -204,7 +204,7 @@ export function renderTreeMap(o, data) {
           values.push(entry.area);
         });
         var shadingRate = 1 - (d.area / values[values.length - 1]);
-        return shadeColor2(d.parent.color, shadingRate);
+        return shadeColor2(d.parent.color ? d.parent.color : d.color, shadingRate);
       });
 
     function shadeColor2(color, percent) {
