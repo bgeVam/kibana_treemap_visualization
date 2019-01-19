@@ -22,7 +22,7 @@ export function renderTreeMap(o, data) {
   var width = opts.width - margin.left - margin.right,
     height = opts.height - margin.top - margin.bottom - theight,
     transitioning;
-  var color = d3.scale.category20c();
+  var color = d3.scale.category10();
 
   var x = d3.scale.linear()
     .domain([0, width])
@@ -185,7 +185,7 @@ export function renderTreeMap(o, data) {
       });
     t.call(text);
 
-    g.selectAll(".parent")
+    g.selectAll(".child")
       .append("title")
       .text(function(d) {
         return d.key + " ( " + formatNumber(d.value) + ")";
@@ -193,8 +193,29 @@ export function renderTreeMap(o, data) {
 
     g.selectAll("rect")
       .style("fill", function(d) {
-        return color(d.key);
+        d.color = color(d.key);
+        return d.color;
       });
+
+    g.selectAll(".child")
+      .style("fill", function(d) {
+        var values = [];
+        d.parent.values.forEach(function(entry) {
+          values.push(entry.area);
+        });
+        var shadingRate = 1 - (d.area / values[values.length - 1]);
+        return shadeColor2(d.parent.color, shadingRate);
+      });
+
+    function shadeColor2(color, percent) {
+      var f = parseInt(color.slice(1), 16),
+        t = percent < 0 ? 0 : 255,
+        p = percent < 0 ? percent * -1 : percent,
+        R = f >> 16,
+        G = f >> 8 & 0x00FF,
+        B = f & 0x0000FF;
+      return "#" + (0x1000000 + (Math.round((t - R) * p) + R) * 0x10000 + (Math.round((t - G) * p) + G) * 0x100 + (Math.round((t - B) * p) + B)).toString(16).slice(1);
+    }
 
     function childClicked(d) {
       console.log("child clicked, add filter where " + d.label + " = " + d.key)

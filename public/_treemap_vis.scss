@@ -24,7 +24,10 @@ div.treemap rect.parent {
 }
 
 .children rect.child {
+  stroke: white;
+  stroke-width: 2px;
   fill-opacity: 1;
+  cursor: pointer;
 }
 
 .children rect.parent,
@@ -36,6 +39,7 @@ div.treemap rect.parent {
   stroke: white;
   stroke-width: 2px;
   fill-opacity: 0;
+  visibility: hidden;
 }
 
 .children text.ptext {
