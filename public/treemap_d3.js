@@ -104,7 +104,7 @@ export function renderTreeMap(o, data) {
       });
       d._children.forEach(function(c) {
         if (c.values) {
-          var depth = o.childLabels.length - c.values.length;
+          var depth = getDepth(d, 0);
           c.label = o.childLabels[depth];
         }
         c.x = d.x + c.x * d.dx;
@@ -115,6 +115,14 @@ export function renderTreeMap(o, data) {
         layout(c);
       });
     }
+  }
+
+  function getDepth(d, depth) {
+    if (d.parent) {
+      depth = depth + 1;
+      return getDepth(d.parent, depth);
+    }
+    return depth;
   }
 
   function display(d) {

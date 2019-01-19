@@ -24,6 +24,9 @@ export default class TreemapVisualizationController {
     });
     var keyLabels = getKeyLabels(table.columns);
     var data = nestData(values, keyLabels);
+    // we reduce the data, labels and columns as we don't want a level in the tree with a single child
+    keyLabels = reduceLabelsAndColumns(data, keyLabels, table.columns);
+    data = reduceLevels(data);
     var parent = $('#treemap').closest('.visualization');
     renderTreeMap({
       childLabels: keyLabels,
@@ -50,6 +53,32 @@ function nestData(values, keyLabels) {
   });
   data = data.entries(values);
   return data;
+}
+
+function reduceLevels(data) {
+  if (data.length == 1) {
+    if (data[0].values) {
+      return reduceLevels(data[0].values);
+    } else {
+      return data;
+    }
+  } else {
+    return data;
+  }
+}
+
+function reduceLabelsAndColumns(data, labels, columns) {
+  if (data.length == 1) {
+    if (data[0].values) {
+      labels.shift();
+      columns.shift();
+      return reduceLabelsAndColumns(data[0].values, labels, columns);
+    } else {
+      return labels;
+    }
+  } else {
+    return labels;
+  }
 }
 
 function renameRow(row, columns) {
