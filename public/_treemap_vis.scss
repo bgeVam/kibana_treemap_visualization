@@ -17,11 +17,14 @@ text {
 div.treemap rect {
   fill: none;
   stroke: #fff;
-  fill-opacity: 0.1;
 }
 
 div.treemap rect.parent {
     pointer-events: none;
+}
+
+.children rect.child {
+  fill-opacity: 1;
 }
 
 .children rect.parent,
@@ -30,10 +33,9 @@ div.treemap rect.parent {
 }
 
 .children rect.parent {
-  fill: #bbb;
-  fill-opacity: 0.7;
   stroke: white;
   stroke-width: 2px;
+  fill-opacity: 0;
 }
 
 .children text.ptext {
