@@ -64,6 +64,19 @@ export function renderTreeMap(o, data) {
   layout(root);
   display(root);
 
+  $(".children rect.parent").hover(
+    function(event) {
+      // Highlight child by occluding the others
+      $(this).parent().siblings().css("fill-opacity", "0.7");
+      $(this).parent().siblings().children().children().css("fill-opacity", "0.5");
+    },
+    function(event) {
+      // Reset highlight
+      $(this).parent().siblings().css("fill-opacity", "0.1");
+      $(this).parent().siblings().children().children().css("fill-opacity", "1");
+    }
+  );
+  
   if (window.parent !== window) {
     var myheight = document.documentElement.scrollHeight || document.body.scrollHeight;
     window.parent.postMessage({
