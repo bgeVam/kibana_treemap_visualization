@@ -96,7 +96,7 @@ function getKeyName(key, columns) {
       if (entry.name == "Count") {
         result = "value";
       } else {
-        result = entry.name.split('.')[0];
+        result = entry.name;
       }
     }
   });
@@ -107,7 +107,7 @@ function getKeyLabels(columns) {
   var keyLabels = [];
   columns.forEach(function(entry) {
     if (entry.name != "Count") {
-      keyLabels.push(entry.name.split('.')[0]);
+      keyLabels.push(entry.name);
     }
   });
   return keyLabels;
