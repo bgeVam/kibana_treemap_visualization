@@ -46,14 +46,12 @@ div.treemap rect.parent {
 
 
 .children text.ptext {
-    font-weight: bold;
     font-size: 24px;
     text-align: center;
     margin-top: 6px;
     margin-bottom: 6px;
     fill: white;
     opacity: 0.85;
-    text-shadow: -0.5px 0 grey, 0 0.5px grey, 0.5px 0 grey, 0 -0.5px grey;
 }
 
 .children:hover rect.child {
