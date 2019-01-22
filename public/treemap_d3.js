@@ -178,11 +178,6 @@ export function renderTreeMap(o, data) {
       .text(function(d) {
         return d.key;
       });
-    t.append("tspan")
-      .attr("dy", "1.0em")
-      .text(function(d) {
-        return formatNumber(d.value);
-      });
     t.call(text);
 
     g.selectAll(".parent")
@@ -203,7 +198,7 @@ export function renderTreeMap(o, data) {
         d.parent.values.forEach(function(entry) {
           values.push(entry.area);
         });
-        var shadingRate = 1 - (d.area / values[values.length - 1]);
+        var shadingRate = 1 - (d.area / values[values.length - 1] + 0.2);
         return shadeColor2(d.parent.color ? d.parent.color : d.color, shadingRate);
       });
 
@@ -283,9 +278,6 @@ export function renderTreeMap(o, data) {
       })
       .attr("y", function(d) {
         return y(d.y) + 6;
-      })
-      .style("opacity", function(d) {
-        return this.getComputedTextLength() < x(d.x + d.dx) - x(d.x) ? 1 : 0;
       });
   }
 
@@ -295,9 +287,6 @@ export function renderTreeMap(o, data) {
       })
       .attr("y", function(d) {
         return y(d.y + d.dy) - 6;
-      })
-      .style("opacity", function(d) {
-        return this.getComputedTextLength() < x(d.x + d.dx) - x(d.x) ? 1 : 0;
       });
   }
 
