@@ -64,6 +64,52 @@ export function renderTreeMap(o, data) {
   layout(root);
   display(root);
 
+  //Show tooltip, when mouse moves over parent
+  $(".children rect.parent").mousemove(function(event) {
+    updateTooltip($(this)[0], event.pageX, event.pageY)
+  });
+
+  //Hide tooltip, when mouse leaves parent
+  $(".children rect.parent").mouseleave(function(event) {
+    var tooltipDiv = $(".vis-tooltip");
+    tooltipDiv
+      .css('left', '-500px')
+      .css('top', '-500px')
+      .css('visibility', 'hidden')
+  });
+
+  function updateTooltip(parent, x, y) {
+    var tooltipDiv = $(".vis-tooltip");
+    tooltipDiv
+      .css('left', x + 'px')
+      .css('top', y + 'px')
+      .css('visibility', 'visible');
+    var tooltipTable = getToolTipTable(tooltipDiv, parent);
+    $('.vis-tooltip .ng-scope').remove();
+    tooltipDiv.append(tooltipTable);
+  }
+
+  function getToolTipTable(tooltipDiv, parent) {
+    var table = $("<table></table>").appendTo(tooltipDiv)
+    table.attr("class", "ng-scope")
+    var tableBody = $("<tbody></tbody>").appendTo(table);
+    return $(getTableRows(parent)).appendTo(tableBody);
+  }
+
+  function getTableRows(parent) {
+    return `<tr ng-repeat="detail in details" class="ng-scope">
+      <td class="tooltip-label ng-binding">Count</td>
+      <td class="tooltip-value ng-binding">
+          ` + parent.__data__.value + `
+      </td>
+    </tr>
+    <tr ng-repeat="detail in details" class="ng-scope">
+      <td class="tooltip-label ng-binding"> ` + parent.__data__.label + `        </td>
+      <td class="tooltip-value ng-binding"> ` + parent.__data__.key + `          </td>
+    </tr>`;
+  }
+  
+  //Highlight siblings when parent is hovered over
   $(".children rect.parent").hover(
     function(event) {
       // Highlight child by occluding the others
@@ -179,12 +225,6 @@ export function renderTreeMap(o, data) {
         return d.key;
       });
     t.call(text);
-
-    g.selectAll(".parent")
-      .append("title")
-      .text(function(d) {
-        return getTooltipText(d);
-      });
 
     g.selectAll("rect")
       .style("fill", function(d) {
