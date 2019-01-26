@@ -1,4 +1,25 @@
 {
   "name": "kibana_treemap_visualization",
-  "version": "kibana"
+  "version": "6.5.4",
+  "description": "Kibana treemap visualization",
+  "main": "index.js",
+  "kibana": {
+    "version": "6.5.4"
+  },
+  "scripts": {
+    "lint": "eslint",
+    "start": "plugin-helpers start",
+    "test:server": "plugin-helpers test:server",
+    "test:browser": "plugin-helpers test:browser",
+    "build": "plugin-helpers build",
+    "postinstall": "plugin-helpers postinstall"
+  },
+  "devDependencies": {
+    "@elastic/eslint-config-kibana": "0.6.1",
+    "@elastic/plugin-helpers": "^6.0.0",
+    "babel-eslint": "7.2.3",
+    "chai": "^3.5.0",
+    "eslint": "^3.19.0",
+    "eslint-plugin-mocha": "^4.9.0"
+  }
 }
