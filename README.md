@@ -1,6 +1,6 @@
 # Treemap visualization for Kibana
 
-A treemap visualization for Kibana. Tested with Kibana 6.5.2.
+A treemap visualization for Kibana. Tested with Kibana 6.5.4.
 
 Note: This is still work in progress.
 
@@ -32,7 +32,7 @@ The [initial zoomable treemap](https://bost.ocks.org/mike/treemap/) was publishe
 ## Compatibility
 This plugin is compatible with the following versions of Kibana:
 
-* 6.5.2
+* 6.5.4
 
 ## Issues
 Please file issues [here](https://github.com/bgeVam/kibana_treemap_visualization/issues).
