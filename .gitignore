@@ -1,5 +1,7 @@
-*.css
 *.sh
+*.zip
+
+package-lock.json
 
 # Logs
 logs
