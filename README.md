@@ -17,10 +17,10 @@ When a carrier is selected, the next level in the treemap shows how the carriers
 Again, when a destination country is selected, the next level shows the weather of the destination countries, and so on and so forth.
 
 - [Mentions](#mentions)
+- [Installation](#installation)
 - [Compatibility](#compatibility)
 - [Issues](#issues)
-<!--- - [Installation](#installation) --->
-<!--- - [Uninstall](#uninstall) --->
+- [Uninstall](#uninstall)
 <!--- - [Usage](#usage) --->
 <!--- - [Options](#options) ---> 
 
@@ -28,6 +28,23 @@ Again, when a destination country is selected, the next level shows the weather 
 
 Thanks go out to user [@ganeshv](https://github.com/ganeshv), who published [this beautiful zoomable treemap for d3](http://bl.ocks.org/ganeshv/6a8e9ada3ab7f2d88022), which this plugin is based on. 
 The [initial zoomable treemap](https://bost.ocks.org/mike/treemap/) was published by Mike Bostock.
+
+## Installation
+
+### Kibana 6.5.4:
+
+```
+bin/kibana-plugin install https://github.com/bgeVam/kibana_treemap_visualization/releases/download/v6.5.4/kibana_treemap_visualization.zip
+```
+
+## Uninstall
+
+### Kibana 6.x:
+
+```
+bin/kibana-plugin remove kibana_treemap_visualization
+```
+
 
 ## Compatibility
 This plugin is compatible with the following versions of Kibana:
