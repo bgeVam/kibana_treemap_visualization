@@ -104,11 +104,22 @@ export function renderTreeMap(o, data) {
       </td>
     </tr>
     <tr ng-repeat="detail in details" class="ng-scope">
-      <td class="tooltip-label ng-binding"> ` + parent.__data__.label + `        </td>
+      <td class="tooltip-label ng-binding"> ` + getTooltipLabel(parent.__data__) + `        </td>
       <td class="tooltip-value ng-binding"> ` + parent.__data__.key + `          </td>
     </tr>`;
   }
-  
+
+  function getTooltipLabel(d) {
+    var result = d.label;
+    while (d.values) {
+      d = d.values[0];
+      if (d.label) {
+        result += " / " + d.label;
+      }
+    }
+    return result.split("/")[0];
+  }
+
   //Highlight siblings when parent is hovered over
   $(".children rect.parent").hover(
     function(event) {

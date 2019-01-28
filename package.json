@@ -1,10 +1,10 @@
 {
   "name": "kibana_treemap_visualization",
-  "version": "6.5.4",
+  "version": "6.5.2",
   "description": "Kibana treemap visualization",
   "main": "index.js",
   "kibana": {
-    "version": "6.5.4"
+    "version": "6.5.2"
   },
   "scripts": {
     "lint": "eslint",
@@ -15,7 +15,7 @@
     "postinstall": "plugin-helpers postinstall"
   },
   "devDependencies": {
-    "@elastic/eslint-config-kibana": "0.6.1",
+    "@elastic/eslint-config-kibana": "link:../../kibana/packages/eslint-config-kibana",
     "@elastic/plugin-helpers": "^6.0.0",
     "babel-eslint": "7.2.3",
     "chai": "^3.5.0",
