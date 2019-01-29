@@ -110,16 +110,30 @@ export function renderTreeMap(o, data) {
   }
 
   function getTooltipLabel(d) {
-    var result = d.label;
-    while (d.values) {
-      d = d.values[0];
-      if (d.label) {
-        result += " / " + d.label;
-      }
+    var tooltipLabels = [];
+    for (const [key, value] of Object.entries(o.table.rows[0])) {
+      tooltipLabels.push(value)
     }
-    return result.split("/")[0];
+    var queryFilter = o.vis.API.queryFilter;
+    var filters = queryFilter.getFilters();
+    var queries = [];
+    filters.forEach(function(filter) {
+      if (filter) {
+        if (filter.query && !filter.meta.disabled) {
+          if (filter.query.match) {
+            queries.push(Object.entries(filter.query.match)["0"][1].query);
+          }
+        }
+      }
+    });
+    var result = "";
+    tooltipLabels.forEach(function(tooltipLabel) {
+      if (queries.includes(tooltipLabel)) {
+        result += tooltipLabel + " / ";
+      }
+    });
+    return result;
   }
-
   //Highlight siblings when parent is hovered over
   $(".children rect.parent").hover(
     function(event) {
@@ -314,11 +328,6 @@ export function renderTreeMap(o, data) {
     return g;
   }
 
-  function getTooltipText(d) {
-    return "field      " + "     value \n" +
-      d.label + "     " + d.key + "   " + formatNumber(d.value) + "\n";
-  }
-
   function text(text) {
     text.selectAll("tspan")
       .attr("x", function(d) {
@@ -354,11 +363,5 @@ export function renderTreeMap(o, data) {
       .attr("height", function(d) {
         return y(d.y + d.dy) - y(d.y);
       });
-  }
-
-  function name(d) {
-    return d.parent ?
-      name(d.parent) + " / " + d.key + " (" + formatNumber(d.value) + ")" :
-      d.key + " (" + formatNumber(d.value) + ")";
   }
 }
