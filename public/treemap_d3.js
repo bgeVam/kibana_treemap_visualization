@@ -64,13 +64,14 @@ export function renderTreeMap(o, data) {
   layout(root);
   display(root);
 
+
   //Show tooltip, when mouse moves over parent
-  $(".children rect.parent").mousemove(function(event) {
+  $(".children rect.child").mousemove(function(event) {
     updateTooltip($(this)[0], event.pageX, event.pageY)
   });
 
   //Hide tooltip, when mouse leaves parent
-  $(".children rect.parent").mouseleave(function(event) {
+  $(".children rect.child").mouseleave(function(event) {
     var tooltipDiv = $(".vis-tooltip");
     tooltipDiv
       .css('left', '-500px')
@@ -96,41 +97,75 @@ export function renderTreeMap(o, data) {
     return $(getTableRows(parent)).appendTo(tableBody);
   }
 
-  function getTableRows(parent) {
+  function getTableRows(d) {
     return `<tr ng-repeat="detail in details" class="ng-scope">
       <td class="tooltip-label ng-binding">Count</td>
       <td class="tooltip-value ng-binding">
-          ` + parent.__data__.value + `
+          ` + d.__data__.value + `
       </td>
     </tr>
     <tr ng-repeat="detail in details" class="ng-scope">
-      <td class="tooltip-label ng-binding"> ` + getTooltipLabel(parent.__data__) + `        </td>
-      <td class="tooltip-value ng-binding"> ` + parent.__data__.key + `          </td>
+      <td class="tooltip-label ng-binding"> ` + getTooltipLabel(d.__data__) + `        </td>
     </tr>`;
   }
 
   function getTooltipLabel(d) {
-    var result = d.label;
-    while (d.values) {
-      d = d.values[0];
-      if (d.label) {
-        result += " / " + d.label;
-      }
+    var tooltipLabels = [];
+    for (const [key, value] of Object.entries(o.table.rows[0])) {
+      tooltipLabels.push(value)
     }
-    return result.split("/")[0];
+    var queryFilter = o.vis.API.queryFilter;
+    var filters = queryFilter.getFilters();
+    var queries = [];
+    filters.forEach(function(filter) {
+      if (filter) {
+        if (filter.query && !filter.meta.disabled) {
+          if (filter.query.match) {
+            queries.push(Object.entries(filter.query.match)["0"][1].query);
+          }
+        }
+      }
+    });
+    var result = "";
+    tooltipLabels.forEach(function(tooltipLabel) {
+      if (queries.includes(tooltipLabel)) {
+          result += tooltipLabel + " / ";
+      }
+    });
+    var parentKeyLabel = d.parent ? d.parent.key + " / "  : "";
+    var keyLabel = d.key ? d.key : "";
+    return result + parentKeyLabel + keyLabel;
   }
 
-  //Highlight siblings when parent is hovered over
-  $(".children rect.parent").hover(
+  //Hide parent when hovered over
+  $(".children rect.parent").mouseenter(
+    function(event) {
+      $(this).css("visibility", "hidden");
+    });
+
+  //Highlight siblings when child is hovered over
+  $(".children rect.child").hover(
     function(event) {
       // Highlight child by occluding the others
-      $(this).parent().siblings().css("fill-opacity", "0.7");
-      $(this).parent().siblings().children().children().css("fill-opacity", "0.5");
+      var highlightedKey = $(this)[0].__data__.key;
+      //console.log($(this).parent().parent())
+
+      //$(this).parent().siblings().children("rect.parent").css("visibility", "visible");
+      //
+      //De-Highlight all .child
+      $(this).parent().parent().parent().children().children().children(".child").css("fill-opacity", "0.5");
+      //Highlight all .child with the same label
+      $(this).parent().parent().parent().children().children().children(".ctext").each(function(index) {
+        var childKey = $(this)[0].__data__.key;
+        if (highlightedKey == childKey) {
+          $(this).parent().children(".child").css("fill-opacity", "1");
+        }
+      });
     },
     function(event) {
       // Reset highlight
-      $(this).parent().siblings().css("fill-opacity", "0.1");
-      $(this).parent().siblings().children().children().css("fill-opacity", "1");
+      $(this).parent().parent().children("rect.parent").css("visibility", "visible");
+      $(this).parent().parent().parent().children().children().children(".child").css("fill-opacity", "1");
     }
   );
 
@@ -207,6 +242,7 @@ export function renderTreeMap(o, data) {
       })
       .classed("children", true)
       .on("click", childClicked);
+
     var children = g.selectAll(".child")
       .data(function(d) {
         return d._children || [d];
@@ -249,7 +285,7 @@ export function renderTreeMap(o, data) {
         d.parent.values.forEach(function(entry) {
           values.push(entry.area);
         });
-        var shadingRate = 1 - (d.area / values[values.length - 1] + 0.2);
+        var shadingRate = 1 - (d.area / values[values.length - 1] + 0.4);
         return shadeColor2(d.parent.color ? d.parent.color : d.color, shadingRate);
       });
 
