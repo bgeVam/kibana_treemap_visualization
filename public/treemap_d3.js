@@ -1,3 +1,8 @@
+import {
+  colorPalette,
+  palettes,
+} from '@elastic/eui/lib/services';
+
 var defaults = {
   margin: {
     top: 0,
@@ -22,8 +27,7 @@ export function renderTreeMap(o, data) {
   var width = opts.width - margin.left - margin.right,
     height = opts.height - margin.top - margin.bottom - theight,
     transitioning;
-  var color = d3.scale.category10();
-
+  const euiColors = palettes.euiPaletteForLightBackground.colors;
   var x = d3.scale.linear()
     .domain([0, width])
     .range([0, width]);
@@ -253,7 +257,11 @@ export function renderTreeMap(o, data) {
 
     g.selectAll("rect")
       .style("fill", function(d) {
-        d.color = color(d.key);
+        var values = [];
+        d.parent.values.forEach(function(entry) {
+          values.push(entry.area);
+        });
+        d.color = euiColors[values.indexOf(d.area)];
         return d.color;
       });
 
@@ -263,8 +271,12 @@ export function renderTreeMap(o, data) {
         d.parent.values.forEach(function(entry) {
           values.push(entry.area);
         });
-        var shadingRate = 1 - (d.area / values[values.length - 1] + 0.2);
-        return shadeColor2(d.parent.color ? d.parent.color : d.color, shadingRate);
+        // Assign color by value of scale
+        // var color = colorPalette(shadeColor2(d.parent.color, 0.9), d.parent.color, values.length)[values.indexOf(d.area)];
+        // Assign color by area
+        var shadingRate = 1 - (d.area / values[values.length - 1] + 0.4);
+        var color = shadeColor2(d.parent.color ? d.parent.color : d.color, shadingRate);
+        return color;
       });
 
     function shadeColor2(color, percent) {
