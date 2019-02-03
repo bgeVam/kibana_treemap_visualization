@@ -80,6 +80,7 @@ export function renderTreeMap(o, data) {
       .css('left', '-500px')
       .css('top', '-500px')
       .css('visibility', 'hidden')
+      .css('padding', '0px');
   });
 
   function updateTooltip(parent, x, y) {
@@ -87,7 +88,8 @@ export function renderTreeMap(o, data) {
     tooltipDiv
       .css('left', x + 'px')
       .css('top', y + 'px')
-      .css('visibility', 'visible');
+      .css('visibility', 'visible')
+      .css('padding', '10px');
     var tooltipTable = getToolTipTable(tooltipDiv, parent);
     $('.vis-tooltip .ng-scope').remove();
     tooltipDiv.append(tooltipTable);
@@ -103,14 +105,24 @@ export function renderTreeMap(o, data) {
   function getTableRows(parent) {
     return `<tr ng-repeat="detail in details" class="ng-scope">
       <td class="tooltip-label ng-binding">Count</td>
-      <td class="tooltip-value ng-binding">
-          ` + parent.__data__.value + `
+      <td class="tooltip-value ng-binding" style="padding-left: 10px;">
+          ` + parent.__data__.value + ` (` + getShare(parent.__data__) + `%)
       </td>
     </tr>
     <tr ng-repeat="detail in details" class="ng-scope">
-      <td class="tooltip-label ng-binding"> ` + getTooltipLabel(parent.__data__) + `        </td>
-      <td class="tooltip-value ng-binding"> ` + parent.__data__.key + `          </td>
+      <td class="tooltip-label ng-binding"></td>
+      <td class="tooltip-value ng-binding" style="padding-left: 10px;"> ` + getTooltipLabel(parent.__data__) + parent.__data__.key + `          </td>
     </tr>`;
+  }
+
+  function getShare(d) {
+    return ((
+          d.value /
+          d.parent.values.reduce(function(cnt, o) {
+            return cnt + o.value;
+          }, 0)) *
+        100)
+      .toFixed(2);
   }
 
   function getTooltipLabel(d) {
