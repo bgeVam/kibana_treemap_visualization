@@ -27,7 +27,16 @@ export function renderTreeMap(o, data) {
   var width = opts.width - margin.left - margin.right,
     height = opts.height - margin.top - margin.bottom - theight,
     transitioning;
-  const euiColors = palettes.euiPaletteForLightBackground.colors;
+
+  const euiColors = shuffleArray(palettes.euiPaletteColorBlind.colors);
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
   var x = d3.scale.linear()
     .domain([0, width])
     .range([0, width]);
@@ -264,7 +273,7 @@ export function renderTreeMap(o, data) {
       .text(function(d) {
         var ptextLength = Math.ceil(d.dx / 14);
         var ptext;
-        if (d.key.length > ptextLength) {
+        if (d.key && d.key.length > ptextLength) {
           ptext = d.key.substring(0, ptextLength) + "...";
         } else {
           ptext = d.key;
@@ -279,7 +288,8 @@ export function renderTreeMap(o, data) {
         d.parent.values.forEach(function(entry) {
           values.push(entry.area);
         });
-        d.color = euiColors[values.indexOf(d.area)];
+        var pos = Math.floor((values.indexOf(d.area) / values.length) * euiColors.length);
+        d.color = euiColors[pos];
         return d.color;
       });
 
