@@ -260,10 +260,16 @@ export function renderTreeMap(o, data) {
     var t = g.append("text")
       .attr("class", "ptext")
       .attr("dy", ".75em")
-
     t.append("tspan")
       .text(function(d) {
-        return d.key;
+        var ptextLength = Math.ceil(d.dx / 14);
+        var ptext;
+        if (d.key.length > ptextLength) {
+          ptext = d.key.substring(0, ptextLength) + "...";
+        } else {
+          ptext = d.key;
+        }
+        return ptext;
       });
     t.call(text);
 
