@@ -29,10 +29,11 @@ export function renderTreeMap(o, data) {
     transitioning;
 
   const euiColors = shuffleArray(palettes.euiPaletteColorBlind.colors);
+
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
   }
@@ -154,9 +155,18 @@ export function renderTreeMap(o, data) {
     var result = "";
     tooltipLabels.forEach(function(tooltipLabel) {
       if (queries.includes(tooltipLabel)) {
-        result += tooltipLabel + " / ";
+        result += tooltipLabel + " <br>" + getBlanks(result) + "L&ensp;";
       }
     });
+    return result;
+  }
+
+  function getBlanks(str) {
+    var depth = (str.match(/<br>/g) || []).length;
+    var result = "";
+    for (var i = 0; i <= depth; i++) {
+      result += "&emsp;";
+    }
     return result;
   }
   //Highlight siblings when parent is hovered over
