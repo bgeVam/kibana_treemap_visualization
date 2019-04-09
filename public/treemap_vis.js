@@ -12,16 +12,17 @@ import {
 import {
   VisTypesRegistryProvider
 } from 'ui/registry/vis_types';
+import image from './images/treemap.svg';
 
 function TreemapVisualizationProvider(Private) {
   const VisFactory = Private(VisFactoryProvider);
 
   return VisFactory.createBaseVisualization({
     name: 'treemap_visualization',
-    title: 'Treemap Visualization',
-    icon: 'fa fa-gear',
-    description: 'Treemap Visualization',
-    category: CATEGORY.OTHER,
+    title: 'Treemap',
+    image,
+    description: 'Display values in a treemap visualization',
+    category: CATEGORY.BASIC,
     visualization: TreemapVisualizationController,
     editorConfig: {
       optionsTemplate: optionsTemplate,

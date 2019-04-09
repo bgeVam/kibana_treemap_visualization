@@ -9,7 +9,7 @@ Sub-bucketing enables the metric to be split again, on proportions of another me
 Treemaps are used to display hierarchical structures, just like parent child relations. 
 The advantage of treemaps over pie charts, is the fact that the human perception is not very good at comparing segments of a circular structure.
 
-![image](resources/preview.gif)
+![image](public/images/preview.gif)
 
 The example above shows the treemap used on Kibanas sample flight data. 
 The top level of the treemap shows the carriers.
