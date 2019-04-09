@@ -1,10 +1,10 @@
 {
   "name": "kibana_treemap_visualization",
-  "version": "6.5.2",
+  "version": "6.5.4",
   "description": "Kibana treemap visualization",
   "main": "index.js",
   "kibana": {
-    "version": "6.5.2"
+    "version": "6.5.4"
   },
   "scripts": {
     "lint": "eslint",

@@ -100,16 +100,14 @@ export function renderTreeMap(o, data) {
       .css('top', y + 'px')
       .css('visibility', 'visible')
       .css('padding', '10px');
-    var tooltipTable = getToolTipTable(tooltipDiv, parent);
-    $('.vis-tooltip .ng-scope').remove();
-    tooltipDiv.append(tooltipTable);
+    var tooltipTable = getToolTipTable(parent);
+    $('.vis-tooltip').empty();
+    $('.vis-tooltip').append(tooltipTable);
   }
 
-  function getToolTipTable(tooltipDiv, parent) {
-    var table = $("<table></table>").appendTo(tooltipDiv)
-    table.attr("class", "ng-scope")
-    var tableBody = $("<tbody></tbody>").appendTo(table);
-    return $(getTableRows(parent)).appendTo(tableBody);
+  function getToolTipTable(parent) {
+    var table1 = `<table class="ng-scope"><tbody>` + getTableRows(parent) + `</tbody></table>`;
+    return table1
   }
 
   function getTableRows(parent) {
